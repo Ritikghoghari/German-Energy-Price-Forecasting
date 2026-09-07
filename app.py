@@ -43,9 +43,9 @@ st.markdown("""
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* Main container padding */
+    /* Main container padding with ample clearance for Streamlit header */
     .block-container {
-        padding-top: 1.8rem;
+        padding-top: 4.2rem;
         padding-bottom: 3rem;
         max-width: 1280px;
     }
@@ -55,14 +55,14 @@ st.markdown("""
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        padding: 4px 10px;
+        padding: 4px 12px;
         border-radius: 20px;
-        font-size: 0.78rem;
+        font-size: 0.76rem;
         font-weight: 600;
-        background-color: rgba(16, 185, 129, 0.1);
-        color: #10b981;
-        border: 1px solid rgba(16, 185, 129, 0.25);
-        margin-bottom: 8px;
+        letter-spacing: 0.03em;
+        background-color: rgba(16, 185, 129, 0.12);
+        color: #059669;
+        border: 1px solid rgba(16, 185, 129, 0.3);
     }
     .status-dot {
         width: 7px;
@@ -245,14 +245,21 @@ latest_residual = latest['Residual_Load']
 # -----------------------------------------------------------------------------
 # Page Header
 # -----------------------------------------------------------------------------
-st.markdown("""
-<div class="status-badge">
-    <div class="status-dot"></div>
-    <span>BUNDESNETZAGENTUR LIVE DATA FEED ACTIVE</span>
+st.title("⚡ German Day-Ahead Electricity Price Forecaster")
+
+st.markdown(f"""
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: -6px; margin-bottom: 12px;">
+    <div class="status-badge">
+        <div class="status-dot"></div>
+        <span>BUNDESNETZAGENTUR LIVE DATA FEED ACTIVE</span>
+    </div>
+    <span style="color: #94a3b8; font-size: 0.82rem;">•</span>
+    <span style="color: #64748b; font-size: 0.82rem; font-weight: 500;">Bidding Zone: <strong style="color: #334155;">DE-LU</strong></span>
+    <span style="color: #94a3b8; font-size: 0.82rem;">•</span>
+    <span style="color: #64748b; font-size: 0.82rem; font-weight: 500;">Latest Clearing: <strong style="color: #334155;">{latest.name.strftime('%Y-%m-%d %H:00 UTC')}</strong></span>
 </div>
 """, unsafe_allow_html=True)
 
-st.title("⚡ German Day-Ahead Electricity Price Forecaster")
 st.markdown(
     "Accurate 24-hour day-ahead wholesale electricity price predictions for Germany (`DE-LU`). "
     "Models the **Merit Order Effect**, renewable intermittency (Wind & Solar), and grid demand using **XGBoost**."
