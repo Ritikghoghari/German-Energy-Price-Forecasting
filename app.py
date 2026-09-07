@@ -324,7 +324,6 @@ with col_left:
         y="Day_Ahead_Price",
         color="Renewable_Total",
         size="Total_Load",
-        trendline="lowess",
         color_continuous_scale="Viridis",
         labels={
             "Residual_Load": "Residual Load (Demand - Renewables) [MWh]",
@@ -334,6 +333,26 @@ with col_left:
         template="plotly_dark",
         title="Merit Order Curve: Lower Residual Load Slashes Wholesale Prices"
     )
+
+    # Fit smooth non-linear Merit Order trend using pure numpy (no statsmodels dependency)
+    try:
+        x_clean = test_split['Residual_Load'].values
+        y_clean = test_split['Day_Ahead_Price'].values
+        valid_idx = ~np.isnan(x_clean) & ~np.isnan(y_clean)
+        if valid_idx.sum() > 5:
+            poly_coefs = np.polyfit(x_clean[valid_idx], y_clean[valid_idx], deg=2)
+            x_range = np.linspace(x_clean[valid_idx].min(), x_clean[valid_idx].max(), 100)
+            y_trend = np.polyval(poly_coefs, x_range)
+            fig_mo.add_trace(go.Scatter(
+                x=x_range,
+                y=y_trend,
+                mode='lines',
+                name='Merit Order Trend Curve',
+                line=dict(color='#f43f5e', width=2.5, dash='dash')
+            ))
+    except Exception:
+        pass
+
     fig_mo.update_layout(height=400, margin=dict(l=20, r=20, t=40, b=20))
     st.plotly_chart(fig_mo, use_container_width=True)
 
